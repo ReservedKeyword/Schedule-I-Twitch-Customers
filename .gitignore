@@ -1,0 +1,5 @@
+bin
+obj
+FodyWeavers.xml
+FodyWeavers.xsd
+GamePath.props

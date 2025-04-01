@@ -1,0 +1,21 @@
+{
+    "cSpell.words": [
+        "Behaviour",
+        "Blocklisted",
+        "justinfan",
+        "Npcs",
+        "Rebuilder",
+        "reservedkeyword",
+        "Resetable",
+        "Streamlabs",
+        "twitchcustomers"
+    ],
+    "editor.codeLens": false,
+    "files.eol": "\n",
+    "files.exclude": {
+        "bin/": true,
+        "obj/": true,
+        "FodyWeavers.xml": true,
+        "FodyWeavers.xsd": true
+    },
+}
