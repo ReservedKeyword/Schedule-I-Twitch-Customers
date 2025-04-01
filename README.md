@@ -1,13 +1,28 @@
 # Twitch Customers
 
-> [!Note]
-> If you are a user that just cares about the plugin and not how it was developed, feel free to skip the “How It Works” section, unless that sounds of interest to you!
-
-## Overview
-
 Twitch Customers is a BepInEx Unity plugin for the relatively new but already massively popular Steam game, [Schedule I](https://store.steampowered.com/app/3164500/Schedule_I/).
 
 Its primary focus is on Twitch streamers who wish to add an element of interactivity with their audience, by allowing Twitch chatters to appear in the game as customers **in their single player sessions**.
+
+> [!Note]
+> If you are a user that just cares about the plugin and not how it was developed, feel free to skip the “How It Works” section, unless that sounds of interest to you!
+
+## Table of Contents
+
+* [Prerequisites](#prerequisites)
+* [Getting Started](#getting-started)
+* [Configuration](#configuration)
+  * [`Enable Plugin`](#enable-plugin)
+  * [`Preserve Original NPC Name`](#preserve-original-npc-name)
+  * [`Channel Name`](#channel-name)
+  * [`Blocklisted Chatters`](#blocklisted-chatters)
+  * [`Message Command`](#message-command)
+  * [`Queue Size`](#queue-size)
+* [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)
+  * [Does this work with multiplayer?](#does-this-work-with-multiplayer)
+  * [Why is the downloadable DLL so big?](#why-is-the-downloadable-dll-so-big)
+* [How It Works](#how-it-works)
+
 
 ## Prerequisites
 
