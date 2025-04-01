@@ -12,7 +12,8 @@ Its primary focus is on Twitch streamers who wish to add an element of interacti
 ## Prerequisites
 
 * [Schedule I](https://store.steampowered.com/app/3164500/Schedule_I/): Yes, you need to buy the game on Steam. It’s fun, I promise! 🙂
-* [BepInEx 6](https://docs.bepinex.dev/index.html): As Schedule I is an Il2Cpp game, the plugin was developed against bleeding edge [version 6.0.0-pre2](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2).
+* [BepInEx 6](https://docs.bepinex.dev/index.html): As Schedule I is an Il2Cpp game, the plugin was developed against pre-release [version 6.0.0-pre2](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2).
+  * When downloading BepInEx, download the Il2Cpp version for your operating system and CPU architecture (likely `win-x64`).
 
 ## Getting Started
 
@@ -27,6 +28,12 @@ Start Schedule I again, allowing the game *and plugin* time to fully launch, bef
 Proceed to the next section in this document to learn how to configure the plugin!
 
 ## Configuration
+
+The configuration file can be found in your game's root directory, where the plugin was installed.
+
+The path will look similar to `/path/to/game/BepInEx/config/me.reservedkeyword.cfg`, where `/path/to/game` is the path to the Schedule I game directory. (See image above on how to locate where the game was downloaded.)
+
+All plugin configuration options are as follows:
 
 ### `Enable Plugin`
 
