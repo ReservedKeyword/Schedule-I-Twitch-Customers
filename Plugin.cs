@@ -8,7 +8,7 @@ using TwitchCustomers.TwitchIntegration;
 
 namespace TwitchCustomers
 {
-  [BepInPlugin(Constants.PLUGIN_GUID, Constants.PLUGIN_NAME, Constants.PLUGIN_VERSION)]
+  [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
   public class Plugin : BasePlugin
   {
     public static Plugin Instance { get; private set; }
@@ -55,7 +55,7 @@ namespace TwitchCustomers
 
       if (coroutineRunner != null)
       {
-        coroutineRunner.gameObject.name = $"{Constants.PLUGIN_NAME}.CoroutineRunner";
+        coroutineRunner.gameObject.name = $"{MyPluginInfo.PLUGIN_NAME}.CoroutineRunner";
         Log.LogInfo("CoroutineRunner component added successfully!");
         return;
       }

@@ -46,7 +46,7 @@ Proceed to the next section in this document to learn how to configure the plugi
 
 The configuration file can be found in your game's root directory, where the plugin was installed.
 
-The path will look similar to `/path/to/game/BepInEx/config/me.reservedkeyword.cfg`, where `/path/to/game` is the path to the Schedule I game directory. (See image above on how to locate where the game was downloaded.)
+The path will look similar to `/path/to/game/BepInEx/config/me.reservedkeyword.twitchcustomers.cfg`, where `/path/to/game` is the path to the Schedule I game directory. (See image above on how to locate where the game was downloaded.)
 
 All plugin configuration options are as follows:
 
