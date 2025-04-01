@@ -23,7 +23,7 @@ namespace TwitchCustomers.HarmonyPatches
 
       if (cachedNpc == null)
       {
-        log.LogWarning($"Failed to find cached NPC {gameNpc.GUID}, skipping...");
+        log.LogWarning($"Failed to find cached NPC {gameNpc.GUID}. Can't reset after handover.");
         return;
       }
 

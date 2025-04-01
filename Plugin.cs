@@ -44,6 +44,7 @@ namespace TwitchCustomers
       harmony = new(Constants.ToHarmonyID());
       harmony.PatchAll(typeof(CreateUIPatch));
       harmony.PatchAll(typeof(ExitToMenuPatch));
+      harmony.PatchAll(typeof(ExpireOfferPatch));
       harmony.PatchAll(typeof(NotifyPlayerOfContractPatch));
       harmony.PatchAll(typeof(ProcessHandoverPatch));
     }
