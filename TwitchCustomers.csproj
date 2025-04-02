@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>me.reservedkeyword.twitchcustomers</AssemblyName>
     <Product>TwitchCustomers</Product>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <TargetName>$(Product)-$(Version)</TargetName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
