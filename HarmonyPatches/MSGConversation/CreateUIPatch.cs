@@ -1,12 +1,12 @@
 using BepInEx.Logging;
 using HarmonyLib;
-using ScheduleOne.Messaging;
 using TwitchCustomers.NPC;
 using UnityEngine;
+using ScheduleOneMSGConversation = ScheduleOne.Messaging.MSGConversation;
 
-namespace TwitchCustomers.HarmonyPatches
+namespace TwitchCustomers.HarmonyPatches.MSGConversation
 {
-  [HarmonyPatch(typeof(MSGConversation), nameof(MSGConversation.CreateUI))]
+  [HarmonyPatch(typeof(ScheduleOneMSGConversation), nameof(ScheduleOneMSGConversation.CreateUI))]
   public static class CreateUIPatch
   {
     private static readonly Plugin plugin = Plugin.Instance;
@@ -14,7 +14,7 @@ namespace TwitchCustomers.HarmonyPatches
     private static readonly CachedNPCManager cachedNpcManager = plugin.CachedNPCManager;
 
     [HarmonyPostfix]
-    public static void Postfix(MSGConversation __instance)
+    public static void Postfix(ScheduleOneMSGConversation __instance)
     {
       ScheduleOne.NPCs.NPC gameNpc = __instance.sender;
       RectTransform entryTransform = __instance.entry;

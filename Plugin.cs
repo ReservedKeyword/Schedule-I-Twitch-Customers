@@ -2,7 +2,9 @@
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using TwitchCustomers.Coroutines;
-using TwitchCustomers.HarmonyPatches;
+using TwitchCustomers.HarmonyPatches.Customer;
+using TwitchCustomers.HarmonyPatches.LoadManager;
+using TwitchCustomers.HarmonyPatches.MSGConversation;
 using TwitchCustomers.NPC;
 using TwitchCustomers.TwitchIntegration;
 
@@ -42,10 +44,13 @@ namespace TwitchCustomers
       CachedNPCManager = new CachedNPCManager(Log);
 
       harmony = new(Constants.ToHarmonyID());
+      harmony.PatchAll(typeof(ContractRejectedPatch));
       harmony.PatchAll(typeof(CreateUIPatch));
+      harmony.PatchAll(typeof(CurrentContractEndedPatch));
+      harmony.PatchAll(typeof(EvaluateCounterOfferPatch));
       harmony.PatchAll(typeof(ExitToMenuPatch));
+      harmony.PatchAll(typeof(ExpireOfferPatch));
       harmony.PatchAll(typeof(NotifyPlayerOfContractPatch));
-      harmony.PatchAll(typeof(ProcessHandoverPatch));
     }
 
     private void RegisterConversationNameCoroutineRunner()

@@ -1,29 +1,32 @@
 using BepInEx.Logging;
 using HarmonyLib;
-using ScheduleOne.Economy;
 using TwitchCustomers.NPC;
+using ScheduleOneCustomer = ScheduleOne.Economy.Customer;
+using ScheduleOneNPC = ScheduleOne.NPCs.NPC;
 
-namespace TwitchCustomers.HarmonyPatches
+namespace TwitchCustomers.HarmonyPatches.Customer
 {
-  [HarmonyPatch(typeof(Customer), nameof(Customer.ProcessHandover))]
-  public static class ProcessHandoverPatch
+  [HarmonyPatch(typeof(ScheduleOneCustomer), nameof(ScheduleOneCustomer.ContractRejected))]
+  public static class ContractRejectedPatch
   {
     private static readonly Plugin plugin = Plugin.Instance;
     private static readonly ManualLogSource log = plugin.Log;
     private static readonly PluginConfig pluginConfig = plugin.PluginConfig;
     private static readonly CachedNPCManager cachedNpcManager = plugin.CachedNPCManager;
 
-    public static void Postfix(Customer __instance)
+    public static void Postfix(ScheduleOneCustomer __instance)
     {
       if (!pluginConfig.PreserveOriginalNPCName.Value)
         return;
 
-      ScheduleOne.NPCs.NPC gameNpc = __instance.NPC;
+      ScheduleOneNPC gameNpc = __instance?.NPC;
       CachedNPC cachedNpc = cachedNpcManager.GetFromGameNPC(gameNpc);
 
       if (cachedNpc == null)
       {
-        log.LogWarning($"Failed to find cached NPC {gameNpc.GUID}, skipping...");
+        log.LogWarning(
+          $"Failed to find cached NPC {gameNpc.GUID}. Unable to reset after contract was rejected."
+        );
         return;
       }
 

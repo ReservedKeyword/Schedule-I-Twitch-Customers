@@ -1,12 +1,12 @@
 using BepInEx.Logging;
 using HarmonyLib;
-using ScheduleOne.Economy;
 using TwitchCustomers.NPC;
 using TwitchCustomers.TwitchIntegration;
+using ScheduleOneCustomer = ScheduleOne.Economy.Customer;
 
-namespace TwitchCustomers.HarmonyPatches
+namespace TwitchCustomers.HarmonyPatches.Customer
 {
-  [HarmonyPatch(typeof(Customer), nameof(Customer.NotifyPlayerOfContract))]
+  [HarmonyPatch(typeof(ScheduleOneCustomer), nameof(ScheduleOneCustomer.NotifyPlayerOfContract))]
   public static class NotifyPlayerOfContractPatch
   {
     private static readonly Plugin plugin = Plugin.Instance;
@@ -14,7 +14,7 @@ namespace TwitchCustomers.HarmonyPatches
     private static readonly ChatterManager chatterManager = plugin.ChatterManager;
     private static readonly CachedNPCManager cachedNpcManager = plugin.CachedNPCManager;
 
-    public static void Prefix(Customer __instance)
+    public static void Prefix(ScheduleOneCustomer __instance)
     {
       string randomChatter = chatterManager.GetRandomChatter();
 
@@ -35,7 +35,7 @@ namespace TwitchCustomers.HarmonyPatches
 
       cachedNpc.UpdateCharacterName(randomChatter);
       cachedNpc.UpdateConversationDisplayName(randomChatter);
-      log.LogInfo($"Created/updated NPC {gameNpc.GUID} with Twitch chatter: {randomChatter}.");
+      log.LogInfo($"Updated in-game NPC with Twitch chatter: {randomChatter}.");
     }
   }
 }

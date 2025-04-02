@@ -58,7 +58,17 @@ Set to `true` if you want the plugin to load when the game launches, otherwise s
 
 Defines if, once a contract/deal has finished, the NPC should return to its original name.
 
-If this value is set to `true`, once a contract/deal has finished, the NPC will return back to its original character name, meaning both the character, as well as the text message conversation chain found in the in-game Messages app.
+If this value is set to `true`, once a contract/deal has finished, the NPC will return back to its original character name, meaning both the character, as well as the text message conversation chain found in the in-game Messages app, given the following conditions:
+
+* An offer expires, meaning the NPC reached out to you and you didn't respond in time.
+
+* You explicitly rejected the offer the NPC made.
+
+* You counter-offered the NPC, and they rejected your counter-offer after evaluation.
+
+* The contract failed (e.g., you didn't show up and hand over any product).
+
+* The contract was successful, meaning you successfully met with the NPC and gave them the product.
 
 If this value is set to `false`, once a contract/deal has finished, the NPC’s character and text message conversation chain will remain the Twitch chatter’s username until the character places another contract order, at which point their name will change to reflect a new Twitch chatter.
 

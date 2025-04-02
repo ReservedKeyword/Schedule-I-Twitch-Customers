@@ -1,11 +1,11 @@
 using BepInEx.Logging;
 using HarmonyLib;
-using ScheduleOne.Persistence;
 using TwitchCustomers.NPC;
+using ScheduleOneLoadManager = ScheduleOne.Persistence.LoadManager;
 
-namespace TwitchCustomers.HarmonyPatches
+namespace TwitchCustomers.HarmonyPatches.LoadManager
 {
-  [HarmonyPatch(typeof(LoadManager), nameof(LoadManager.ExitToMenu))]
+  [HarmonyPatch(typeof(ScheduleOneLoadManager), nameof(ScheduleOneLoadManager.ExitToMenu))]
   public static class ExitToMenuPatch
   {
     private static readonly Plugin plugin = Plugin.Instance;
