@@ -25,7 +25,7 @@ namespace TwitchCustomers
       Instance = this;
       PluginConfig = new(this);
 
-      if (!PluginConfig.IsEnabled.Value)
+      if (!PluginConfig.IsEnabled)
       {
         Log.LogInfo("Plugin disabled in configuration file, won't proceed...");
         return;
@@ -35,9 +35,10 @@ namespace TwitchCustomers
 
       ChatterManager = new(
         this,
-        PluginConfig.ChannelName.Value,
+        PluginConfig.ChannelName,
         PluginConfig.BlocklistedChatters,
-        PluginConfig.QueueSize.Value
+        PluginConfig.MessageCommand,
+        PluginConfig.QueueSize
       );
       ChatterManager.Connect();
 

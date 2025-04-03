@@ -23,7 +23,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
       ref bool __result
     )
     {
-      if (!pluginConfig.PreserveOriginalNPCName.Value)
+      if (!pluginConfig.PreserveOriginalNPCName)
         return;
 
       if (!__result)

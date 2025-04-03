@@ -16,7 +16,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
 
     public static void Postfix(ScheduleOneCustomer __instance)
     {
-      if (!pluginConfig.PreserveOriginalNPCName.Value)
+      if (!pluginConfig.PreserveOriginalNPCName)
         return;
 
       ScheduleOneNPC gameNpc = __instance?.NPC;

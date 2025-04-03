@@ -12,13 +12,14 @@ namespace TwitchCustomers.TwitchIntegration
     Plugin plugin,
     string channelName,
     List<string> blocklistedChatters,
+    string messageCommand,
     int queueSize
   )
   {
     private readonly ManualLogSource log = plugin.Log;
-    private readonly string messageCommand = plugin.PluginConfig.MessageCommand.Value;
     private readonly string channelName = channelName;
     private readonly List<string> blocklistedChatters = blocklistedChatters;
+    private readonly string messageCommand = messageCommand;
     private readonly int queueSize = queueSize;
 
     private TwitchClient client;
