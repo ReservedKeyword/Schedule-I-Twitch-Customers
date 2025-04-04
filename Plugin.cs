@@ -1,7 +1,9 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using TwitchCustomers.Coroutines;
+using TwitchCustomers.HarmonyPatches;
 using TwitchCustomers.HarmonyPatches.Customer;
 using TwitchCustomers.HarmonyPatches.LoadManager;
 using TwitchCustomers.HarmonyPatches.MSGConversation;
@@ -33,24 +35,35 @@ namespace TwitchCustomers
 
       RegisterConversationNameCoroutineRunner();
 
+      // Setup Twitch chatter integration listener
       ChatterManager = new(
         this,
         PluginConfig.ChannelName.Value,
         PluginConfig.BlocklistedChatters,
         PluginConfig.QueueSize.Value
       );
+
       ChatterManager.Connect();
 
+      // Setup cached NPC management
       CachedNPCManager = new CachedNPCManager(Log);
 
+      // Setup Harmony patches
       harmony = new(Constants.ToHarmonyID());
-      harmony.PatchAll(typeof(ContractRejectedPatch));
-      harmony.PatchAll(typeof(CreateUIPatch));
-      harmony.PatchAll(typeof(CurrentContractEndedPatch));
-      harmony.PatchAll(typeof(EvaluateCounterOfferPatch));
-      harmony.PatchAll(typeof(ExitToMenuPatch));
-      harmony.PatchAll(typeof(ExpireOfferPatch));
-      harmony.PatchAll(typeof(NotifyPlayerOfContractPatch));
+
+      List<IPatchModule> patchModules =
+      [
+        new CustomerPatchModule(),
+        new LoadManagerPatchModule(),
+        new MSGConversationPatchModule(),
+      ];
+
+      foreach (IPatchModule patchModule in patchModules)
+      {
+        patchModule.Setup(this);
+      }
+
+      harmony.PatchAll();
     }
 
     private void RegisterConversationNameCoroutineRunner()
