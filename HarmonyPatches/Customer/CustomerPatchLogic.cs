@@ -31,7 +31,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
       }
     }
 
-    public void ExpireOffer_Postfix(ScheduleOneCustomer __instance)
+    public void ExpireOffer_Prefix(ScheduleOneCustomer __instance)
     {
       ResetCustomerIfPreserveOriginalNPC(__instance);
     }

@@ -39,9 +39,9 @@ namespace TwitchCustomers.HarmonyPatches.Customer
 
     [HarmonyPatch(nameof(ScheduleOneCustomer.ExpireOffer))]
     [HarmonyPrefix]
-    public static void ExpireOffer_Postfix_Wrapper(ScheduleOneCustomer __instance)
+    public static void ExpireOffer_Prefix_Wrapper(ScheduleOneCustomer __instance)
     {
-      patchLogic?.ExpireOffer_Postfix(__instance);
+      patchLogic?.ExpireOffer_Prefix(__instance);
     }
 
     [HarmonyPatch(nameof(ScheduleOneCustomer.NotifyPlayerOfContract))]
