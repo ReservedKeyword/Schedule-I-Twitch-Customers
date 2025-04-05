@@ -9,6 +9,7 @@ namespace TwitchCustomers
     public List<string> BlocklistedChatters;
     public ConfigEntry<string> ChannelName;
     public ConfigEntry<string> MessageCommand;
+    public ConfigEntry<double> SubscriberWeight;
     public ConfigEntry<bool> PreserveOriginalNPCName;
     public ConfigEntry<int> QueueSize;
 
@@ -51,6 +52,13 @@ namespace TwitchCustomers
         "Message Command",
         "!iwannabeacustomer",
         "Unique command that registers a Twitch chatter as someone who wishes to be in game."
+      );
+
+      SubscriberWeight = configFile.Bind(
+        "Twitch Integration",
+        "Subscriber Weight",
+        1.2d,
+        "Weight making subscribers more likely to get picked (e.g., 1.2 means subscribers are 20% more likely)."
       );
 
       QueueSize = configFile.Bind(

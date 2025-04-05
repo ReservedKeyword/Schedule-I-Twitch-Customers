@@ -40,6 +40,8 @@ namespace TwitchCustomers
         this,
         PluginConfig.ChannelName.Value,
         PluginConfig.BlocklistedChatters,
+        PluginConfig.MessageCommand.Value,
+        PluginConfig.SubscriberWeight.Value,
         PluginConfig.QueueSize.Value
       );
 
