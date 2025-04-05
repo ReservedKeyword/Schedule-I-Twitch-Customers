@@ -1,6 +1,7 @@
 using System.Collections;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP.Utils;
+using Il2CppSystem;
 using TwitchCustomers.NPC;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,7 +31,7 @@ namespace TwitchCustomers.Coroutines
         return;
       }
 
-      if (npcToUpdate == null || npcToUpdate.GameNPC == null)
+      if (npcToUpdate == null || npcToUpdate.NPCGUID == Guid.Empty)
       {
         log.LogWarning("Attempted to start delayed UI update for a null NPC via CoroutineRunner.");
         return;
@@ -49,7 +50,7 @@ namespace TwitchCustomers.Coroutines
     {
       yield return new WaitForEndOfFrame();
 
-      if (npcToUpdate == null || npcToUpdate.GameNPC == null || npcToUpdate.UnityRectEntry == null)
+      if (npcToUpdate == null || npcToUpdate.NPCGUID == Guid.Empty || npcToUpdate.UnityRectEntry == null)
       {
         log.LogWarning(
           $"NPC or its UI became invalid before delayed UI update for {newDisplayName}."
@@ -60,7 +61,7 @@ namespace TwitchCustomers.Coroutines
       try
       {
         log.LogInfo(
-          $"CoroutineRunner attempting delayed UI update for NPC {npcToUpdate.GameNPC.GUID} to name {newDisplayName}..."
+          $"CoroutineRunner attempting delayed UI update for NPC {npcToUpdate.NPCGUID} to name {newDisplayName}..."
         );
         Text nameTextComponent = npcToUpdate.GetConversationTextComponent();
 
@@ -69,18 +70,18 @@ namespace TwitchCustomers.Coroutines
           nameTextComponent.text = newDisplayName;
           npcToUpdate.UpdateConversationCategoryPadding();
           log.LogInfo(
-            $"CoroutineRunner delayed UI update successful for NPC {npcToUpdate.GameNPC.GUID}."
+            $"CoroutineRunner delayed UI update successful for NPC {npcToUpdate.NPCGUID}."
           );
           yield break;
         }
         log.LogWarning(
-          $"Name Text component was null during CoroutineRunner delayed UI update for NPC {npcToUpdate.GameNPC.GUID}."
+          $"Name Text component was null during CoroutineRunner delayed UI update for NPC {npcToUpdate.NPCGUID}."
         );
       }
       catch (System.Exception ex)
       {
         log.LogError(
-          $"Exception during CoroutineRunner delayed UI update for NPC {npcToUpdate.GameNPC?.GUID}: {ex}"
+          $"Exception during CoroutineRunner delayed UI update for NPC {npcToUpdate.NPCGUID}: {ex}"
         );
       }
     }

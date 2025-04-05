@@ -10,13 +10,13 @@ namespace TwitchCustomers.NPC
 
     public bool AddCachedNPC(CachedNPC npc)
     {
-      if (npc?.GameNPC == null)
+      if (npc?.NPCGUID == null)
       {
         Log.LogWarning("Attempted to add a null CachedNPC or one with a null GameNPC.");
         return false;
       }
 
-      Il2CppSystem.Guid guid = npc.GameNPC.GUID;
+      Il2CppSystem.Guid guid = npc.NPCGUID;
       return cachedNpcsByGuid.TryAdd(guid, npc);
     }
 

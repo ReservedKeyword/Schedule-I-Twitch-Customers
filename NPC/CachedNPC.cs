@@ -1,8 +1,10 @@
 using BepInEx.Logging;
 using ScheduleOne.Messaging;
+using ScheduleOne.NPCs;
 using TwitchCustomers.Coroutines;
 using UnityEngine;
 using UnityEngine.UI;
+using ScheduleOneNPC = ScheduleOne.NPCs.NPC;
 
 namespace TwitchCustomers.NPC
 {
@@ -13,21 +15,21 @@ namespace TwitchCustomers.NPC
     private static readonly ConversationNameCoroutineRunner conversationNameCoroutineRunner =
       ConversationNameCoroutineRunner.Instance;
 
-    public ScheduleOne.NPCs.NPC GameNPC;
-    public RectTransform UnityRectEntry;
-    public OriginalNPCName OriginalNPCName;
+    public Il2CppSystem.Guid NPCGUID { get; private set; }
+    public RectTransform UnityRectEntry { get; set; }
+    public OriginalNPCName OriginalNPCName { get; private set; }
 
-    public CachedNPC(ScheduleOne.NPCs.NPC gameNPC)
+    public CachedNPC(ScheduleOneNPC gameNpc)
     {
-      GameNPC = gameNPC;
-      OriginalNPCName = new(GameNPC.FirstName, GameNPC.LastName);
+      NPCGUID = gameNpc.GUID;
+      OriginalNPCName = new(gameNpc.FirstName, gameNpc.LastName);
     }
 
-    public CachedNPC(ScheduleOne.NPCs.NPC gameNPC, RectTransform unityRectEntry)
+    public CachedNPC(ScheduleOneNPC gameNpc, RectTransform unityRectEntry)
     {
-      GameNPC = gameNPC;
+      NPCGUID = gameNpc.GUID;
       UnityRectEntry = unityRectEntry;
-      OriginalNPCName = new(GameNPC.FirstName, GameNPC.LastName);
+      OriginalNPCName = new(gameNpc.FirstName, gameNpc.LastName);
     }
 
     public Text GetConversationTextComponent()
@@ -53,6 +55,24 @@ namespace TwitchCustomers.NPC
       return nameTextComponent;
     }
 
+    private ScheduleOneNPC GetGameNPC()
+    {
+      if (NPCManager.NPCRegistry == null)
+      {
+        log.LogError($"Cannot fetch Game NPC, NPCRegistry was found null.");
+        return null;
+      }
+
+      foreach (ScheduleOneNPC gameNpc in NPCManager.NPCRegistry)
+      {
+        if (gameNpc != null && gameNpc.GUID == NPCGUID)
+        {
+          return gameNpc;
+        }
+      }
+      return null;
+    }
+
     public void ResetCharacterName()
     {
       UpdateCharacterName(OriginalNPCName.FirstName, OriginalNPCName.LastName);
@@ -65,8 +85,16 @@ namespace TwitchCustomers.NPC
 
     public void UpdateCharacterName(string firstName, string lastName = "")
     {
-      GameNPC.FirstName = firstName;
-      GameNPC.LastName = lastName;
+      ScheduleOneNPC gameNpc = GetGameNPC();
+
+      if (gameNpc == null)
+      {
+        log.LogError($"Failed to update character name, NPC not found in game registry.");
+        return;
+      }
+
+      gameNpc.FirstName = firstName;
+      gameNpc.LastName = lastName;
     }
 
     public void UpdateConversationDisplayName(string contactName)
@@ -77,12 +105,22 @@ namespace TwitchCustomers.NPC
         return;
       }
 
-      MSGConversation msgConversation = MessagingManager.instance.GetConversation(GameNPC);
+      ScheduleOneNPC gameNpc = GetGameNPC();
+
+      if (gameNpc == null)
+      {
+        log.LogError(
+          $"Failed to update conversation display name, NPC not found in game registry."
+        );
+        return;
+      }
+
+      MSGConversation msgConversation = MessagingManager.instance.GetConversation(gameNpc);
 
       if (msgConversation == null)
       {
         log.LogWarning(
-          $"Could not get MSGConversation for {GameNPC?.GUID}. Cannot update contactName."
+          $"Could not get MSGConversation for {gameNpc?.GUID}. Cannot update contactName."
         );
         return;
       }
