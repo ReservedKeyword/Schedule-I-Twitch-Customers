@@ -93,6 +93,14 @@ The command that registers a Twitch chatter’s intent to be in the game. This s
 
 As a quick aside, a Twitch chatter’s message is inspected to *contain* this phrase, meaning that it does not have to be their full message, nor does it have to begin with an exclamation mark (!).
 
+### `Subscriber Weight`
+
+A weight value that can be used to determine the "luck" of subscribers when getting drawn. Non-subscribers have a static weight of 1.0.
+
+* If you would like, for example, subscribers to have 20% more luck than non-subscribers, this value should be set to `1.2`.
+
+* If you would like subscribers to have the same luck as non-subscribers, this value should be set to `1.0`.
+
 ### `Queue Size`
 
 The maximum number of unique chatters that should be selected from at any given time. Chatters will always be chosen at "[random](https://en.wikipedia.org/wiki/Pseudorandomness);" this value simply defines the maximum number of unique chatters you would like the plugin to choose from.
