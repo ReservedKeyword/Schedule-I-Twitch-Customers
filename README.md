@@ -17,6 +17,7 @@ Its primary focus is on Twitch streamers who wish to add an element of interacti
   * [`Channel Name`](#channel-name)
   * [`Blocklisted Chatters`](#blocklisted-chatters)
   * [`Message Command`](#message-command)
+  * [`Subscriber Weight`](#subscriber-weight)
   * [`Queue Size`](#queue-size)
 * [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq)
   * [Does this work with multiplayer?](#does-this-work-with-multiplayer)
