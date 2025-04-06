@@ -1,16 +1,16 @@
-using BepInEx.Logging;
+using MelonLoader;
 using TwitchCustomers.NPC;
 
 namespace TwitchCustomers.HarmonyPatches.LoadManager
 {
-  public class LoadManagerPatchLogic(Plugin plugin)
+  public class LoadManagerPatchLogic(Mod mod)
   {
-    private readonly CachedNPCManager cachedNpcManager = plugin.CachedNPCManager;
-    private readonly ManualLogSource log = plugin.Log;
+    private readonly CachedNPCManager cachedNpcManager = mod.CachedNPCManger;
+    private readonly MelonLogger.Instance log = mod.LoggerInstance;
 
     public void ExitToMenu_Postfix()
     {
-      log.LogInfo("Player exited to main menu, clearing NPC cache...");
+      log.Msg("Player exited to main menu, clearing NPC cache...");
       cachedNpcManager.Clear();
     }
   }

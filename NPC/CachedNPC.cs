@@ -1,21 +1,20 @@
-using BepInEx.Logging;
-using ScheduleOne.Messaging;
-using ScheduleOne.NPCs;
-using TwitchCustomers.Coroutines;
+using System.Collections;
+using Il2CppScheduleOne.Messaging;
+using Il2CppScheduleOne.NPCs;
+using Il2CppSystem;
+using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
-using ScheduleOneNPC = ScheduleOne.NPCs.NPC;
+using ScheduleOneNPC = Il2CppScheduleOne.NPCs.NPC;
 
 namespace TwitchCustomers.NPC
 {
   public class CachedNPC
   {
-    private static readonly Plugin plugin = Plugin.Instance;
-    private static readonly ManualLogSource log = plugin.Log;
-    private static readonly ConversationNameCoroutineRunner conversationNameCoroutineRunner =
-      ConversationNameCoroutineRunner.Instance;
+    private static readonly Mod mod = Mod.Instance;
+    private static readonly MelonLogger.Instance log = mod.LoggerInstance;
 
-    public Il2CppSystem.Guid NPCGUID { get; private set; }
+    public Guid NPCGUID { get; private set; }
     public RectTransform UnityRectEntry { get; set; }
     public OriginalNPCName OriginalNPCName { get; private set; }
 
@@ -32,7 +31,7 @@ namespace TwitchCustomers.NPC
       OriginalNPCName = new(gameNpc.FirstName, gameNpc.LastName);
     }
 
-    public Text GetConversationTextComponent()
+    private Text GetConversationTextComponent()
     {
       if (UnityRectEntry == null)
         return null;
@@ -41,7 +40,7 @@ namespace TwitchCustomers.NPC
 
       if (nameTransform == null)
       {
-        log.LogWarning($"Could not find 'Name' child transform on {UnityRectEntry.name}.");
+        log.Warning($"Could not find 'Name' child transform on {UnityRectEntry.name}.");
         return null;
       }
 
@@ -49,9 +48,10 @@ namespace TwitchCustomers.NPC
 
       if (nameTextComponent == null)
       {
-        log.LogWarning($"'Name' transform on {UnityRectEntry.name} is missing Text component.");
+        log.Warning($"'Name' transform on {UnityRectEntry.name} is missing Text component.");
         return null;
       }
+
       return nameTextComponent;
     }
 
@@ -59,7 +59,7 @@ namespace TwitchCustomers.NPC
     {
       if (NPCManager.NPCRegistry == null)
       {
-        log.LogError($"Cannot fetch Game NPC, NPCRegistry was found null.");
+        log.Error($"Cannot fetch Game NPC, NPCRegistry was found null.");
         return null;
       }
 
@@ -70,6 +70,7 @@ namespace TwitchCustomers.NPC
           return gameNpc;
         }
       }
+
       return null;
     }
 
@@ -89,7 +90,7 @@ namespace TwitchCustomers.NPC
 
       if (gameNpc == null)
       {
-        log.LogError($"Failed to update character name, NPC not found in game registry.");
+        log.Error($"Failed to update character name, NPC not found in game registry.");
         return;
       }
 
@@ -101,7 +102,7 @@ namespace TwitchCustomers.NPC
     {
       if (MessagingManager.instance == null)
       {
-        log.LogError("MessagingManager.instance is null!");
+        log.Error("MessagingManager.instance is null!");
         return;
       }
 
@@ -109,9 +110,7 @@ namespace TwitchCustomers.NPC
 
       if (gameNpc == null)
       {
-        log.LogError(
-          $"Failed to update conversation display name, NPC not found in game registry."
-        );
+        log.Error($"Failed to update conversation display name, NPC not found in game registry.");
         return;
       }
 
@@ -119,27 +118,59 @@ namespace TwitchCustomers.NPC
 
       if (msgConversation == null)
       {
-        log.LogWarning(
+        log.Warning(
           $"Could not get MSGConversation for {gameNpc?.GUID}. Cannot update contactName."
         );
         return;
       }
 
       msgConversation.contactName = contactName;
-
-      if (UnityRectEntry != null && conversationNameCoroutineRunner != null)
-        conversationNameCoroutineRunner.StartDelayedConversationNameUpdate(this, contactName);
+      MelonCoroutines.Start(UpdateConversationDisplayName_Coroutine(contactName));
     }
 
-    public void UpdateConversationCategoryPadding()
+    private IEnumerator UpdateConversationDisplayName_Coroutine(string newDisplayName)
     {
       if (UnityRectEntry == null)
+      {
+        log.Warning($"Can't update conversation display name, UnityRectEntry was null.");
+        yield break;
+      }
+
+      try
+      {
+        Text nameTextComponent = GetConversationTextComponent();
+
+        if (nameTextComponent == null)
+        {
+          log.Warning($"Can't update conversation display name, nameTextComponent was null");
+          yield break;
+        }
+
+        nameTextComponent.text = newDisplayName;
+        UpdateConversationCategoryPadding();
+        log.Msg($"NPC {NPCGUID} text component updated successfully!");
+      }
+      catch (System.Exception ex)
+      {
+        log.Error($"Exception while updating conversation display name: {ex}.");
+      }
+    }
+
+    private void UpdateConversationCategoryPadding()
+    {
+      if (UnityRectEntry == null)
+      {
+        log.Warning($"Can't update conversation display name, UnityRectEntry was null.");
         return;
+      }
 
       Text nameTextComponent = GetConversationTextComponent();
 
       if (nameTextComponent == null)
+      {
+        log.Warning($"Can't update conversation display name, nameTextComponent was null");
         return;
+      }
 
       float nameComponentWidth = nameTextComponent.preferredWidth;
       RectTransform categoryTransform = UnityRectEntry
@@ -148,7 +179,7 @@ namespace TwitchCustomers.NPC
 
       if (categoryTransform == null)
       {
-        log.LogWarning(
+        log.Warning(
           $"Could not find 'Category' child transform (or RectTransform) on {UnityRectEntry.name}."
         );
         return;

@@ -1,5 +1,5 @@
 using System;
-using BepInEx.Logging;
+using MelonLoader;
 
 namespace TwitchCustomers.HarmonyPatches
 {
@@ -7,7 +7,7 @@ namespace TwitchCustomers.HarmonyPatches
   {
     Type StaticWrapperType { get; }
 
-    void Setup(Plugin plugin);
+    void Setup(Mod mod);
   }
 
   public abstract class PatchModule<TLogic> : IPatchModule
@@ -17,23 +17,21 @@ namespace TwitchCustomers.HarmonyPatches
 
     protected TLogic LogicInstance { get; private set; }
 
-    public abstract TLogic CreateLogicInstance(Plugin plugin);
+    public abstract TLogic CreateLogicInstance(Mod mod);
 
-    public abstract void InitializeStaticWrapper(ManualLogSource log);
+    public abstract void InitializeStaticWrapper(MelonLogger.Instance log);
 
-    public virtual void Setup(Plugin plugin)
+    public virtual void Setup(Mod mod)
     {
-      ManualLogSource log = plugin.Log;
+      MelonLogger.Instance log = mod.LoggerInstance;
 
       if (LogicInstance != null)
       {
-        log.LogWarning(
-          $"PatchModule for {StaticWrapperType.Name} already initialized. Skipping..."
-        );
+        log.Warning($"PatchModule for {StaticWrapperType.Name} already initialized. Skipping...");
         return;
       }
 
-      LogicInstance = CreateLogicInstance(plugin);
+      LogicInstance = CreateLogicInstance(mod);
 
       if (LogicInstance == null)
       {
@@ -42,7 +40,7 @@ namespace TwitchCustomers.HarmonyPatches
         );
       }
 
-      InitializeStaticWrapper(plugin.Log);
+      InitializeStaticWrapper(mod.LoggerInstance);
     }
   }
 }

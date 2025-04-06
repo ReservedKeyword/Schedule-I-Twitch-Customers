@@ -1,17 +1,17 @@
-using BepInEx.Logging;
+using MelonLoader;
 using TwitchCustomers.NPC;
 using TwitchCustomers.TwitchIntegration;
-using ScheduleOneCustomer = ScheduleOne.Economy.Customer;
-using ScheduleOneNPC = ScheduleOne.NPCs.NPC;
+using ScheduleOneCustomer = Il2CppScheduleOne.Economy.Customer;
+using ScheduleOneNPC = Il2CppScheduleOne.NPCs.NPC;
 
 namespace TwitchCustomers.HarmonyPatches.Customer
 {
-  public class CustomerPatchLogic(Plugin plugin)
+  public class CustomerPatchLogic(Mod mod)
   {
-    private readonly CachedNPCManager cachedNpcManager = plugin.CachedNPCManager;
-    private readonly ChatterManager chatterManager = plugin.ChatterManager;
-    private readonly ManualLogSource log = plugin.Log;
-    private readonly PluginConfig pluginConfig = plugin.PluginConfig;
+    private readonly CachedNPCManager cachedNpcManager = mod.CachedNPCManger;
+    private readonly ChatterManager chatterManager = mod.ChatterManager;
+    private readonly MelonLogger.Instance log = mod.LoggerInstance;
+    private readonly ModConfig modConfig = mod.ModConfig;
 
     public void ContractRejected_Postfix(ScheduleOneCustomer __instance)
     {
@@ -42,7 +42,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
 
       if (string.IsNullOrEmpty(randomChatter))
       {
-        log.LogWarning("No chatter found for contract notification, skipping name update.");
+        log.Warning("No chatter found for contract notification, skipping name update.");
         return;
       }
 
@@ -57,12 +57,12 @@ namespace TwitchCustomers.HarmonyPatches.Customer
 
       cachedNpc.UpdateCharacterName(randomChatter);
       cachedNpc.UpdateConversationDisplayName(randomChatter);
-      log.LogInfo($"Updated in-game NPC with Twitch chatter: {randomChatter}.");
+      log.Msg($"Updated in-game NPC with Twitch chatter: {randomChatter}.");
     }
 
     private void ResetCustomerIfPreserveOriginalNPC(ScheduleOneCustomer customer)
     {
-      if (!pluginConfig.PreserveOriginalNPCName.Value)
+      if (!modConfig.PreserveOriginalNPCName)
         return;
 
       ScheduleOneNPC gameNpc = customer.NPC;
@@ -70,7 +70,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
 
       if (cachedNpc == null)
       {
-        log.LogWarning($"Failed to find cached NPC {gameNpc.GUID}. Unable to reset customer.");
+        log.Warning($"Failed to find cached NPC {gameNpc.GUID}. Unable to reset customer.");
         return;
       }
 

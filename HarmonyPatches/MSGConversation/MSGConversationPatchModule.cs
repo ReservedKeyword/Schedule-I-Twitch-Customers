@@ -1,5 +1,5 @@
 using System;
-using BepInEx.Logging;
+using MelonLoader;
 
 namespace TwitchCustomers.HarmonyPatches.MSGConversation
 {
@@ -7,13 +7,15 @@ namespace TwitchCustomers.HarmonyPatches.MSGConversation
   {
     public override Type StaticWrapperType => typeof(MSGConversationPatchWrapper);
 
-    public override MSGConversationPatchLogic CreateLogicInstance(Plugin plugin)
+    public override MSGConversationPatchLogic CreateLogicInstance(Mod mod)
     {
-      plugin.Log.LogInfo("LoadManagerPatchModule created & bound LoadManagerPatchLogic instance.");
-      return new MSGConversationPatchLogic(plugin);
+      mod.LoggerInstance.Msg(
+        "LoadManagerPatchModule created & bound LoadManagerPatchLogic instance."
+      );
+      return new MSGConversationPatchLogic(mod);
     }
 
-    public override void InitializeStaticWrapper(ManualLogSource log)
+    public override void InitializeStaticWrapper(MelonLogger.Instance log)
     {
       if (LogicInstance is MSGConversationPatchLogic logic)
       {
@@ -21,7 +23,7 @@ namespace TwitchCustomers.HarmonyPatches.MSGConversation
         return;
       }
 
-      log.LogError(
+      log.Error(
         $"LogicInstance is not type MSGConversationPatchLogic in MSGConversationPatchModule. Type is ${LogicInstance?.GetType().Name ?? "unknown"}."
       );
 

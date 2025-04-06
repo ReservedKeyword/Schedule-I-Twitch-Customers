@@ -1,5 +1,5 @@
 using System;
-using BepInEx.Logging;
+using MelonLoader;
 
 namespace TwitchCustomers.HarmonyPatches.LoadManager
 {
@@ -7,13 +7,15 @@ namespace TwitchCustomers.HarmonyPatches.LoadManager
   {
     public override Type StaticWrapperType => typeof(LoadManagerPatchWrapper);
 
-    public override LoadManagerPatchLogic CreateLogicInstance(Plugin plugin)
+    public override LoadManagerPatchLogic CreateLogicInstance(Mod mod)
     {
-      plugin.Log.LogInfo("LoadManagerPatchModule created & bound LoadManagerPatchLogic instance.");
-      return new LoadManagerPatchLogic(plugin);
+      mod.LoggerInstance.Msg(
+        "LoadManagerPatchModule created & bound LoadManagerPatchLogic instance."
+      );
+      return new LoadManagerPatchLogic(mod);
     }
 
-    public override void InitializeStaticWrapper(ManualLogSource log)
+    public override void InitializeStaticWrapper(MelonLogger.Instance log)
     {
       if (LogicInstance is LoadManagerPatchLogic logic)
       {
@@ -21,7 +23,7 @@ namespace TwitchCustomers.HarmonyPatches.LoadManager
         return;
       }
 
-      log.LogError(
+      log.Error(
         $"LogicInstance is not type LoadManagerPatchLogic in LoadManagerPatchModule. Type is ${LogicInstance?.GetType().Name ?? "unknown"}."
       );
 

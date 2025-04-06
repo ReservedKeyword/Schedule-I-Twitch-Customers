@@ -1,5 +1,5 @@
 using HarmonyLib;
-using ScheduleOneMSGConversation = ScheduleOne.Messaging.MSGConversation;
+using ScheduleOneMSGConversation = Il2CppScheduleOne.Messaging.MSGConversation;
 
 namespace TwitchCustomers.HarmonyPatches.MSGConversation
 {

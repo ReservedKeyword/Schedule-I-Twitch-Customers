@@ -1,5 +1,5 @@
 using HarmonyLib;
-using ScheduleOneCustomer = ScheduleOne.Economy.Customer;
+using ScheduleOneCustomer = Il2CppScheduleOne.Economy.Customer;
 
 namespace TwitchCustomers.HarmonyPatches.Customer
 {
