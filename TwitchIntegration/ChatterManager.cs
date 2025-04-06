@@ -1,21 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Logging;
+using MelonLoader;
 using TwitchLib.Client;
 using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 
 namespace TwitchCustomers.TwitchIntegration
 {
-  public class ChatterManager(
-    Plugin plugin,
-    string channelName,
-    List<string> blocklistedChatters,
-    string messageCommand,
-    double subscriberWeight,
-    int queueSize
-  )
+  public class ChatterManager(Mod mod, ModConfig modConfig)
   {
     private enum TargetGroup
     {
@@ -26,14 +19,14 @@ namespace TwitchCustomers.TwitchIntegration
 
     private const double NON_SUBSCRIBER_WEIGHT = 1.0;
 
-    private readonly string channelName = channelName;
-    private readonly List<string> blocklistedChatters = blocklistedChatters;
-    private readonly string messageCommand = messageCommand;
-    private readonly double subscriberWeight = subscriberWeight;
-    private readonly int queueSize = queueSize;
+    private readonly string channelName = modConfig.ChannelName;
+    private readonly List<string> blocklistedChatters = modConfig.BlocklistedChatters;
+    private readonly string messageCommand = modConfig.MessageCommand;
+    private readonly double subscriberWeight = modConfig.SubscriberWeight;
+    private readonly int queueSize = modConfig.QueueSize;
 
     private TwitchClient client;
-    private readonly ManualLogSource log = plugin.Log;
+    private readonly MelonLogger.Instance log = mod.LoggerInstance;
 
     private readonly object chattersLock = new();
     private readonly HashSet<string> subscriberParticipants = [];
@@ -52,25 +45,25 @@ namespace TwitchCustomers.TwitchIntegration
       client.OnMessageReceived += Client_OnMessageReceived;
       client.Connect();
 
-      log.LogInfo("Attempting to connect to Twitch IRC client...");
+      log.Msg("Attempting to connect to Twitch IRC client...");
     }
 
     private void Client_OnConnected(object sender, OnConnectedArgs e)
     {
-      log.LogInfo("Connected to Twitch IRC client.");
+      log.Msg("Connected to Twitch IRC client.");
       client.JoinChannel(channelName);
-      log.LogInfo($"Attempting to join channel {channelName} as anonymous user...");
+      log.Msg($"Attempting to join channel {channelName} as anonymous user...");
     }
 
     private void Client_OnConnectionError(object sender, OnConnectionErrorArgs e)
     {
-      log.LogError("Failed to connect to Twitch IRC client!");
-      log.LogError(e.Error.Message);
+      log.Error("Failed to connect to Twitch IRC client!");
+      log.Error(e.Error.Message);
     }
 
     private void Client_OnJoinedChannel(object sender, OnJoinedChannelArgs e)
     {
-      log.LogInfo($"Joined {channelName}'s Twitch channel as anonymous user.");
+      log.Msg($"Joined {channelName}'s Twitch channel as anonymous user.");
     }
 
     private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
@@ -80,7 +73,7 @@ namespace TwitchCustomers.TwitchIntegration
 
       if (blocklistedChatters.Contains(displayName, StringComparer.CurrentCultureIgnoreCase))
       {
-        log.LogInfo($"Detected blocklisted chatter {displayName}, will not add to queue.");
+        log.Msg($"Detected blocklisted chatter {displayName}, will not add to queue.");
         return;
       }
 
@@ -95,12 +88,12 @@ namespace TwitchCustomers.TwitchIntegration
         if (isSubscriber)
         {
           subscriberParticipants.Add(displayName);
-          log.LogInfo($"Twitch chatter {displayName} (subscriber) added as participant.");
+          log.Msg($"Twitch chatter {displayName} (subscriber) added as participant.");
         }
         else
         {
           nonSubscriberParticipants.Add(displayName);
-          log.LogInfo($"Twitch chatter {displayName} (non-subscriber) added as participant.");
+          log.Msg($"Twitch chatter {displayName} (non-subscriber) added as participant.");
         }
       }
     }
@@ -144,7 +137,7 @@ namespace TwitchCustomers.TwitchIntegration
       {
         if (GetTotalParticipants() == 0)
         {
-          log.LogWarning("No chatters found, nothing to return.");
+          log.Warning("No chatters found, nothing to return.");
           return null;
         }
 
@@ -152,7 +145,7 @@ namespace TwitchCustomers.TwitchIntegration
 
         if (totalWeight <= 0)
         {
-          log.LogError("Total weight is zero or negative. Cannot perform weighted pick.");
+          log.Error("Total weight is zero or negative. Cannot perform weighted pick.");
           return null;
         }
 
@@ -168,7 +161,7 @@ namespace TwitchCustomers.TwitchIntegration
             int subIndex = random.Next(subscriberParticipants.Count);
             winner = subscriberParticipants.ElementAt(subIndex);
             subscriberParticipants.Remove(winner);
-            log.LogInfo($"Selected winner (subscriber): {winner}");
+            log.Msg($"Selected winner (subscriber): {winner}");
             winnerSelected = true;
             break;
 
@@ -176,26 +169,26 @@ namespace TwitchCustomers.TwitchIntegration
             int nonSubIndex = random.Next(nonSubscriberParticipants.Count);
             winner = nonSubscriberParticipants.ElementAt(nonSubIndex);
             nonSubscriberParticipants.Remove(winner);
-            log.LogInfo($"Selected winner (non-subscriber): {winner}");
+            log.Msg($"Selected winner (non-subscriber): {winner}");
             winnerSelected = true;
             break;
 
           case TargetGroup.None:
           default:
-            log.LogWarning("No target group determined for selection.");
+            log.Warning("No target group determined for selection.");
             winnerSelected = false;
             break;
         }
 
         if (!winnerSelected && (GetTotalParticipants() > 0))
         {
-          log.LogError(
+          log.Error(
             $"Failed to select winner event thought participants exist (Target Group: {target})."
           );
           return null;
         }
 
-        log.LogInfo($"Returning winner: {winner}. Remaining participants: {GetTotalParticipants()}.");
+        log.Msg($"Returning winner: {winner}. Remaining participants: {GetTotalParticipants()}.");
         return winner;
       }
     }

@@ -1,35 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="GamePath.props" Condition="Exists('GamePath.props')" />
+	<Import Project="GamePath.props" Condition="Exists('GamePath.props')" />
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>me.reservedkeyword.twitchcustomers</AssemblyName>
-    <Product>TwitchCustomers</Product>
-    <Version>0.2.2</Version>
-    <TargetName>$(Product)-$(Version)</TargetName>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <RestoreAdditionalProjectSources>
-      https://api.nuget.org/v3/index.json;
-      https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
-    </RestoreAdditionalProjectSources>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<AssemblyName>TwitchCustomers</AssemblyName>
+		<RootNamespace>TwitchCustomers</RootNamespace>
+		<AssemblyVersion>0.3.1</AssemblyVersion>
+		<TargetName>$(AssemblyName)-$(AssemblyVersion)</TargetName>
+		<LangVersion>default</LangVersion>
+		<IsPackable>false</IsPackable>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<LangVersion>latest</LangVersion>
+		<OutputPath>bin\$(Configuration)</OutputPath>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="costura.fody" Version="6.0.0">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <Reference Include="$(GameDir)\BepInEx\interop\Assembly-CSharp.dll" Private="false" />
-    <Reference Include="$(GameDir)\BepInEx\interop\FishNet.Runtime.dll" Private="false" />
-    <Reference Include="$(GameDir)\BepInEx\interop\Il2Cppmscorlib.dll" Private="false" />
-    <Reference Include="$(GameDir)\BepInEx\interop\UnityEngine.CoreModule.dll" Private="false" />
-    <Reference Include="$(GameDir)\BepInEx\interop\UnityEngine.UI.dll" Private="false" />
-    <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" Private="true" />
-    <PackageReference Include="TwitchLib" Version="3.5.3" Private="false" />
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="$(MelonLoaderDir)\net6\0Harmony.dll" Private="false" />
+		<Reference Include="$(MelonLoaderDir)\net6\MelonLoader.dll" Private="false" />
+		<Reference Include="$(MelonLoaderDir)\net6\Il2CppInterop.Runtime.dll" Private="false" />
+		<Reference Include="$(Il2CppDir)\Assembly-CSharp.dll" Private="false" />
+		<Reference Include="$(Il2CppDir)\Il2CppFishNet.Runtime.dll" Private="false" />
+		<Reference Include="$(Il2CppDir)\Il2Cppmscorlib.dll" Private="false" />
+		<Reference Include="$(Il2CppDir)\UnityEngine.CoreModule.dll" Private="false" />
+		<Reference Include="$(Il2CppDir)\UnityEngine.UI.dll" Private="false" />
+		<PackageReference Include="TwitchLib" Version="3.5.3" Private="false" />
+	</ItemGroup>
+	
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(BaseGameDir)\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)\TwitchLib.Client*.dll&quot; &quot;$(BaseGameDir)\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)\TwitchLib.Client.Enums.dll&quot; &quot;$(BaseGameDir)\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)\TwitchLib.Client.Models.dll&quot; &quot;$(BaseGameDir)\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)\TwitchLib.Communication.dll&quot; &quot;$(BaseGameDir)\Mods&quot;" />
+	</Target>
 </Project>

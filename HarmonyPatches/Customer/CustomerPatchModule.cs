@@ -1,5 +1,5 @@
 using System;
-using BepInEx.Logging;
+using MelonLoader;
 
 namespace TwitchCustomers.HarmonyPatches.Customer
 {
@@ -7,13 +7,13 @@ namespace TwitchCustomers.HarmonyPatches.Customer
   {
     public override Type StaticWrapperType => typeof(CustomerPatchWrapper);
 
-    public override CustomerPatchLogic CreateLogicInstance(Plugin plugin)
+    public override CustomerPatchLogic CreateLogicInstance(Mod mod)
     {
-      plugin.Log.LogInfo("CustomerPatchModule created & bound CustomerPatchLogic instance.");
-      return new CustomerPatchLogic(plugin);
+      mod.LoggerInstance.Msg("CustomerPatchModule created & bound CustomerPatchLogic instance.");
+      return new CustomerPatchLogic(mod);
     }
 
-    public override void InitializeStaticWrapper(ManualLogSource log)
+    public override void InitializeStaticWrapper(MelonLogger.Instance log)
     {
       if (LogicInstance is CustomerPatchLogic logic)
       {
@@ -21,7 +21,7 @@ namespace TwitchCustomers.HarmonyPatches.Customer
         return;
       }
 
-      log.LogError(
+      log.Error(
         $"LogicInstance is not type CustomerPatchLogic in CustomerPatchModule. Type is ${LogicInstance?.GetType().Name ?? "unknown"}."
       );
 

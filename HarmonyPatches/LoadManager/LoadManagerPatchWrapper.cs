@@ -1,5 +1,5 @@
 using HarmonyLib;
-using ScheduleOneLoadManager = ScheduleOne.Persistence.LoadManager;
+using ScheduleOneLoadManager = Il2CppScheduleOne.Persistence.LoadManager;
 
 namespace TwitchCustomers.HarmonyPatches.LoadManager
 {

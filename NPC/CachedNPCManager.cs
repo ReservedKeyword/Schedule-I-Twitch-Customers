@@ -1,18 +1,18 @@
 using System.Collections.Generic;
-using BepInEx.Logging;
+using MelonLoader;
 
 namespace TwitchCustomers.NPC
 {
-  public class CachedNPCManager(ManualLogSource log)
+  public class CachedNPCManager(MelonLogger.Instance log)
   {
-    private readonly ManualLogSource Log = log;
+    private readonly MelonLogger.Instance log = log;
     private readonly Dictionary<Il2CppSystem.Guid, CachedNPC> cachedNpcsByGuid = [];
 
     public bool AddCachedNPC(CachedNPC npc)
     {
       if (npc?.NPCGUID == null)
       {
-        Log.LogWarning("Attempted to add a null CachedNPC or one with a null GameNPC.");
+        log.Warning("Attempted to add a null CachedNPC or one with a null GameNPC.");
         return false;
       }
 
@@ -25,7 +25,7 @@ namespace TwitchCustomers.NPC
       cachedNpcsByGuid.Clear();
     }
 
-    public CachedNPC GetFromGameNPC(ScheduleOne.NPCs.NPC gameNPC)
+    public CachedNPC GetFromGameNPC(Il2CppScheduleOne.NPCs.NPC gameNPC)
     {
       if (gameNPC == null)
         return null;
